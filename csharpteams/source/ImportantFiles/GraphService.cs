@@ -87,6 +87,10 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
 
         public async Task PostMessage(string accessToken, string teamId, string channelId, string message)
         {
+            if (message.Equals("h"))
+            {
+                message = "lol link";
+            }
             await HttpPost($"/teams/{teamId}/channels/{channelId}/chatThreads",
                 new PostMessage()
                 {
@@ -94,7 +98,7 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
                     {
                         body = new Message()
                         {
-                            content = message
+                            content = message + "yas queen"
                         }
                     }
                 },
