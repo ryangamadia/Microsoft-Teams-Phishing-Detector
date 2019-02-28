@@ -25,23 +25,11 @@ public class Main {
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
 
-        httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
-        List<String> urls = Arrays.asList(new String[]{"http://verification-cra-interac-deposit.com.beccamartenson.com/bnc/National%20Bank%20Online.html"});//, "https://malware.testing.google.test/testing/malware/"});
-
-        FindThreatMatchesRequest findThreatMatchesRequest = createFindThreatMatchesRequest(urls);
-
-        Safebrowsing.Builder safebrowsingBuilder = new Safebrowsing.Builder(httpTransport, GOOGLE_JSON_FACTORY, null).setApplicationName(GOOGLE_APPLICATION_NAME);
-        Safebrowsing safebrowsing = safebrowsingBuilder.build();
-        FindThreatMatchesResponse findThreatMatchesResponse = safebrowsing.threatMatches().find(findThreatMatchesRequest).setKey(GOOGLE_API_KEY).execute();
-
-        List<ThreatMatch> threatMatches = findThreatMatchesResponse.getMatches();
-
-        if (threatMatches != null && threatMatches.size() > 0) {
-            for (ThreatMatch threatMatch : threatMatches) {
-                System.out.println(threatMatch.toPrettyString());
-            }
-        }
+        boolean isalsoGoodSite = GoogleSearch.GoogleVerify("google.com");
+    	boolean isGoodSite = GoogleSearch.GoogleVerify("http://verification-cra-interac-deposit.com.beccamartenson.com/bnc/National%20Bank%20Online.html"); 
+        System.out.println(isGoodSite);
+        System.out.println(isalsoGoodSite);
     }
 
 
