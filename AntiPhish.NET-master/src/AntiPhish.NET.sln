@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntiPhish.NET", "AntiPhish.NET\AntiPhish.NET.csproj", "{A65CDCA1-6D6F-4C9C-A82D-16560FDD4AB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiPhish.NET.Test", "..\test\AntiPhish.NET.Test\AntiPhish.NET.Test.csproj", "{ED91C1BB-C53E-4126-AEDD-C0B8CB0C336B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A65CDCA1-6D6F-4C9C-A82D-16560FDD4AB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A65CDCA1-6D6F-4C9C-A82D-16560FDD4AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A65CDCA1-6D6F-4C9C-A82D-16560FDD4AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A65CDCA1-6D6F-4C9C-A82D-16560FDD4AB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED91C1BB-C53E-4126-AEDD-C0B8CB0C336B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED91C1BB-C53E-4126-AEDD-C0B8CB0C336B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED91C1BB-C53E-4126-AEDD-C0B8CB0C336B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED91C1BB-C53E-4126-AEDD-C0B8CB0C336B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8443AF3D-5ECF-4CFC-8C3C-E22EEFC5BDF9}
+	EndGlobalSection
+EndGlobal
