@@ -1,0 +1,156 @@
+{
+  "activityGroupName": "String",
+  "assignedTo": "Su",
+  "azureSubscriptionId": "121342323",
+  "azureTenantId": "String",
+  "category": "Phishing",
+  "closedDateTime": "01-23-2019",
+  "cloudAppStates": [
+    {
+      "destinationServiceIp": "String",
+      "destinationServiceName": "String",
+      "riskScore": "String"
+    }
+  ],
+  "comments": ["String"],
+  "confidence": 1024,
+  "createdDateTime": "02-31-2019",
+  "description": "String",
+  "detectionIds": ["String"],
+  "eventDateTime": "03-12-2019",
+  "feedback": "@odata.type: microsoft.graph.alertFeedback",
+  "fileStates": [
+    {
+      "fileHash": {
+        "hashType": "@odata.type: microsoft.graph.fileHashType",
+        "hashValue": "String"
+      },
+      "name": "String",
+      "path": "String",
+      "riskScore": "String"
+    }
+  ],
+  "hostStates": [
+    {
+      "fqdn": "String",
+      "isAzureAadJoined": true,
+      "isAzureAadRegistered": true,
+      "isHybridAzureDomainJoined": true,
+      "netBiosName": "String",
+      "os": "String",
+      "privateIpAddress": "String",
+      "publicIpAddress": "String",
+      "riskScore": "String"
+    }
+  ],
+  "id": "12349012901",
+  "lastModifiedDateTime": "String (timestamp)",
+  "malwareStates": [
+    {
+      "category": "String",
+      "family": "String",
+      "name": "String",
+      "severity": "String",
+      "wasRunning": true
+    }
+  ],
+  "networkConnections": [
+    {
+      "applicationName": "String",
+      "destinationAddress": "String",
+      "destinationDomain": "String",
+      "destinationPort": "String",
+      "destinationUrl": "String",
+      "direction": "@odata.type: microsoft.graph.connectionDirection",
+      "domainRegisteredDateTime": "String (timestamp)",
+      "localDnsName": "String",
+      "natDestinationAddress": "String",
+      "natDestinationPort": "String",
+      "natSourceAddress": "String",
+      "natSourcePort": "String",
+      "protocol": "@odata.type: microsoft.graph.securityNetworkProtocol",
+      "riskScore": "String",
+      "sourceAddress": "String",
+      "sourcePort": "String",
+      "status": "@odata.type: microsoft.graph.connectionStatus",
+      "urlParameters": "String"
+    }
+  ],
+  "processes": [
+    {
+      "accountName": "String",
+      "commandLine": "String",
+      "createdDateTime": "String (timestamp)",
+      "fileHash": {
+        "hashType": "@odata.type: microsoft.graph.fileHashType",
+        "hashValue": "String"
+      },
+      "integrityLevel": "@odata.type: microsoft.graph.processIntegrityLevel",
+      "isElevated": true,
+      "name": "String",
+      "parentProcessCreatedDateTime": "String (timestamp)",
+      "parentProcessId": 1024,
+      "parentProcessName": "String",
+      "path": "String",
+      "processId": 1024
+    }
+  ],
+  "recommendedActions": ["String"],
+  "registryKeyStates": [
+    {
+      "hive": "@odata.type: microsoft.graph.registryHive",
+      "key": "String",
+      "oldKey": "String",
+      "oldValueData": "String",
+      "oldValueName": "String",
+      "operation": "@odata.type: microsoft.graph.registryOperation",
+      "processId": 1024,
+      "valueData": "String",
+      "valueName": "String",
+      "valueType": "@odata.type: microsoft.graph.registryValueType"
+    }
+  ],
+  "severity": "@odata.type: microsoft.graph.alertSeverity",
+  "sourceMaterials": ["String"],
+  "status": "@odata.type: microsoft.graph.alertStatus",
+  "tags": ["String"],
+  "title": "String",
+  "triggers": [
+    {
+      "name": "String",
+      "type": "String",
+      "value": "String"
+    }
+  ],
+  "userStates": [
+    {
+      "aadUserId": "String",
+      "accountName": "String",
+      "domainName": "String",
+      "emailRole": "@odata.type: microsoft.graph.emailRole",
+      "isVpn": true,
+      "logonDateTime": "String (timestamp)",
+      "logonId": "String",
+      "logonIp": "String",
+      "logonLocation": "String",
+      "logonType": "@odata.type: microsoft.graph.logonType",
+      "onPremisesSecurityIdentifier": "String",
+      "riskScore": "String",
+      "userAccountType": "@odata.type: microsoft.graph.userAccountSecurityType",
+      "userPrincipalName": "String"
+    }
+  ],
+  "vendorInformation": {
+    "provider": "String",
+    "providerVersion": "String",
+    "subProvider": "String",
+    "vendor": "String"
+  },
+  "vulnerabilityStates": [
+    {
+      "cve": "String",
+      "severity": "String",
+      "wasRunning": true
+    }
+  ]
+}
