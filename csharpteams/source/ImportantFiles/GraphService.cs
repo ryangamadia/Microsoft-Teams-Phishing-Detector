@@ -13,6 +13,7 @@ using System.Configuration;
 using Microsoft.Graph;
 using Microsoft_Teams_Graph_RESTAPIs_Connect.Models;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
 {
@@ -166,14 +167,15 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
 
         public async Task PostMessage(string accessToken, string teamId, string channelId, string message)
         {
-            Boolean safeWebsite = Verify(message); 
+            String urlInMessage = UrlParse(message); //Parses message for URL via RegEX Command
+            Boolean safeWebsite = Verify(urlInMessage); //verifies URL via Google Safe Browse API
             if (safeWebsite == false)
             {
                 //TODO: generate a JSON object that haS the message, and 
                 //send the  JSON object to a function that generates an alert row
                 //on the alert table
 
-                createAlert(message);
+                createAlert(urlInMessage);
                 message = "Potentially unsafe website post attempted, alerting admin for potential security vulnerability. Please see Alerts tab for more information."; 
             }
 
@@ -191,7 +193,13 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
                 endpoint: graphBetaEndpoint);
         }
 
-      private bool Verify(string websiteURL)
+        private string UrlParse(string messageWithLink)
+        {
+            Match text = Regex.Match(messageWithLink, @"http\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(/\S*)?$"); //regular expression (RegEx)
+            return text.Value; 
+        }
+
+        private bool Verify(string websiteURL)
         {
             String path = @"C:\Users\Ryan\Desktop\Graph Test\microsoft-teams-phishing-detector\google-safe_browsing-api-v4-master\GoogleSearch.jar";
             System.Diagnostics.Process process = new System.Diagnostics.Process();
