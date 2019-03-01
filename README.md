@@ -4,6 +4,9 @@ This is a simple way to detect potential malicious links sent through messages o
 The algorithm uses the Google SafeBrowsing API to detect whether or not a link contained in a message leads to a potential security threat through phishing or malicious sites. 
 The algorithm then leverages the Microsoft Graph API with the Security.ReadWrite function to alert the admin of the channel that a user has posted the unsafe link. 
 
+Code has been forked and edited from the following repositories: 
+
+
 # How to Use
 
 As the current Microsoft Teams Graph APIs are only accessible by a tenant admin, to run the app, you'll need to sign in with an account with admin privileges.  Note that in most companies, you might not have these rights, nor the ability to grant yourself these rights, therefore you might benefit from a developer account through the [Office 365 Developer program](https://dev.office.com/devprogram).  
