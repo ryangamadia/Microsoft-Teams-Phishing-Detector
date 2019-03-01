@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -91,10 +92,16 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
 
         public async Task PostMessage(string accessToken, string teamId, string channelId, string message)
         {
+            Boolean maliciousWebsite = Verify(message); 
+
             if (message.Equals("h"))
             {
+
                 message = "lol link";
             }
+
+            message = maliciousWebsite.ToString(); 
+
             await HttpPost($"/teams/{teamId}/channels/{channelId}/chatThreads",
                 new PostMessage()
                 {
@@ -107,6 +114,24 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
                     }
                 },
                 endpoint: graphBetaEndpoint);
+        }
+
+      private bool Verify(string websiteURL)
+        {
+            String path = @"C:\Users\Ryan\Desktop\Graph Test\microsoft-teams-phishing-detector\google-safe_browsing-api-v4-master\GoogleSearch.jar";
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.EnableRaisingEvents = false;
+            process.StartInfo.UseShellExecute = false; 
+            process.StartInfo.RedirectStandardInput = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.FileName = "java.exe";
+            process.StartInfo.Arguments = "-jar " + '"' + path;
+            process.Start();
+            process.StandardInput.WriteLine(websiteURL);
+            String googleOutput = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            Boolean isGoodSite = Convert.ToBoolean(googleOutput);
+            return isGoodSite;
         }
 
         public async Task<Models.Group> CreateNewTeamAndGroup(string accessToken, String displayName, String mailNickname, String description)
