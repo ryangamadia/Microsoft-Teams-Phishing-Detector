@@ -4,5 +4,5 @@ This is a simple way to detect potential malicious links sent through messages o
 The algorithm uses the Google SafeBrowsing API to detect whether or not a link contained in a message leads to a potential security threat through phishing or malicious sites. 
 The algorithm then leverages the Microsoft Graph API with the Security.ReadWrite function to alert the admin of the channel that a user has posted the unsafe link. 
 
-#How to use
+# How to use
 Register your app on the Azure Portal
