@@ -5,10 +5,17 @@
 @using MicrosoftGraph_Security_API_Sample.Models
 @using Newtonsoft.Json;
 @using Resources
+@using Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
 @{
     ViewBag.Title = "Alert Details";
 
-    var currentAlert = Session["CurrentAlert"] as AlertModel;
+    <!-- var currentAlert = Session["CurrentAlert"] as AlertModel; -->
+    <!-- Get Alert Model from a JSON file-->
+    GraphService graph = new GraphService();
+    
+    var currentAlert = graph.readAlertFromJSON();
+
+
     var alertResults = Session["GetAlertResults"] as AlertResultsModel;
     var subscriptionResult = Session["SubscriptionResult"] as SubscriptionResultModel;
     var updateAlertResults = Session["UpdateAlertResults"] as UpdateAlertResultModel;

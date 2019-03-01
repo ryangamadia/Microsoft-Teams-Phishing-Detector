@@ -12,6 +12,7 @@ using Resources;
 using System.Configuration;
 using Microsoft.Graph;
 using MicrosoftGraph_Security_API_Sample.Models;
+using System.IO;
 
 namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
 {
@@ -89,17 +90,92 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
         {
             return await HttpGetList<Models.Group>($"/me/joinedGroups", endpoint: graphBetaEndpoint);
         }
+        // Generate a random string with a given size  
+        public string RandomString(int size, bool lowerCase)
+        {
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            if (lowerCase)
+                return builder.ToString().ToLower();
+            return builder.ToString();
+        }
+
+        public AlertModel readAlertFromJSON() {
+            using (StreamReader r = new StreamReader("C:/Users/Ryan/Desktop/Graph Test/microsoft-teams-phishing-detector/csharpteams/source/alerts.json"))
+            {
+                string json = r.ReadToEnd();
+                AlertModel items = JsonConvert.DeserializeObject<AlertModel>(json);
+                return items;
+            }
+
+
+        }
+
+        public void createAlert(string unsafewebsite) {
+            DateTimeOffset dto = new DateTimeOffset(DateTime.Now);
+
+            GraphDeviceModel device = new GraphDeviceModel();
+            device.Id = RandomString(11, true);
+            device.DisplayName = "Ryan's PC";
+            device.IsCompliant = true;
+            device.Os = "Windows";
+            device.OsVersion = "10.0";
+            device.IsIntuneManaged = true;
+            device.ApproximateLastSignIn = dto;
+
+            IEnumerable<GraphDeviceModel> devices = new GraphDeviceModel[] { device };
+
+            GraphUserModel user = new GraphUserModel();
+            user.DisplayName = "Ryan Gamadia";
+            user.Email = "rgamadia@njdeveloper.onmicrosoft.com";
+            user.ContactVia = "e-mail";
+            user.Upn = "Generated UPN";
+            user.JobTitle = "Developer";
+            user.OfficeLocation = "New York,NY";
+            user.Picture = @"C:/Users/Ryan/Desktop/Graph Test/microsoft-teams-phishing-detector/csharpteams/source/ryangamadia.png";
+            user.OwnedDevices = devices;
+            user.RegisteredDevices = devices;
+            user.SelectedDevice = device;
+            user.Manager = new GraphUserModel();
+
+            AlertDeviceModel adevice = new AlertDeviceModel();
+            adevice.Fqdn = "Generated Fdqn";
+            adevice.IsAzureDomainJoined = true;
+            adevice.PrivateIpAddress = "192.168.1.1";
+            adevice.PublicIpAddress = "192.168.1.2";
+
+            AlertModel model = new AlertModel();
+            model.Id = RandomString(10, true);
+            model.Metadata = "WARNING: Potentially unsafe website post attempted, alerting admin for potential security vulnerability. Risky URL: " + unsafewebsite;
+            List<string> comments = new List<string>(new string[] { "Potential threat", "Phishing", "Suspicious link" });
+            model.Comments = comments;
+            model.Status = "unresolved";
+            model.Query = "Generated query";
+            model.User = user;
+            model.Device = adevice;
+            string alertmodeljson = JsonConvert.SerializeObject(model);
+            //write string to file
+            System.IO.File.WriteAllText(@"C:/Users/Ryan/Desktop/Graph Test/microsoft-teams-phishing-detector/csharpteams/source/alerts.json", alertmodeljson);
+        }
 
         public async Task PostMessage(string accessToken, string teamId, string channelId, string message)
         {
             Boolean safeWebsite = Verify(message); 
-
-
             if (safeWebsite == false)
             {
-                message = "Potentially unsafe website post attempted, alerting admin for potential security vulnerability."; 
-            }
+                //TODO: generate a JSON object that haS the message, and 
+                //send the  JSON object to a function that generates an alert row
+                //on the alert table
 
+                createAlert(message);
+                message = "Potentially unsafe website post attempted, alerting admin for potential security vulnerability. Please see Alerts tab for more information."; 
+            }
 
             await HttpPost($"/teams/{teamId}/channels/{channelId}/chatThreads",
                 new PostMessage()
