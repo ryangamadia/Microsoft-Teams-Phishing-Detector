@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Resources;
 using System.Configuration;
 using Microsoft.Graph;
-using MicrosoftGraph_Security_API_Sample.Models;
+using Microsoft_Teams_Graph_RESTAPIs_Connect.Models;
 using System.IO;
 
 namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
@@ -138,7 +138,7 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
             user.Upn = "Generated UPN";
             user.JobTitle = "Developer";
             user.OfficeLocation = "New York,NY";
-            user.Picture = @"C:/Users/Ryan/Desktop/Graph Test/microsoft-teams-phishing-detector/csharpteams/source/ryangamadia.png";
+            user.Picture = "C:/Users/Ryan/Desktop/Graph Test/microsoft-teams-phishing-detector/csharpteams/source/ryangamadia.png";
             user.OwnedDevices = devices;
             user.RegisteredDevices = devices;
             user.SelectedDevice = device;
@@ -292,7 +292,7 @@ public async Task<Tuple<IEnumerable<Alert>, string>> GetAlerts(AlertFilterModel 
             else
             {
                 // Create filter query
-                var filterQuery = MicrosoftGraph_Security_API_Sample.Providers.GraphQueryProvider.GetQueryByAlertFilter(filters);
+                var filterQuery = Microsoft_Teams_Graph_RESTAPIs_Connect.Providers.GraphQueryProvider.GetQueryByAlertFilter(filters);
 
                 var customOrderByParams = new Dictionary<string, string>();
                 //// If there are no filters and there are no custom odredByParams (if specified only top X)

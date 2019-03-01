@@ -6,7 +6,7 @@
 
 using System.Web.Mvc;
 
-namespace MicrosoftGraph_Security_API_Sample.Providers
+namespace Microsoft_Teams_Graph_RESTAPIs_Connect.Providers
 {
     public class AlertFilterValueProviderFactory : ValueProviderFactory
     {

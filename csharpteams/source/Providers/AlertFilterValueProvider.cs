@@ -7,10 +7,10 @@
 using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
-using MicrosoftGraph_Security_API_Sample.Models;
-using MicrosoftGraph_Security_API_Sample.Models.ViewModels;
+using Microsoft_Teams_Graph_RESTAPIs_Connect.Models;
+using Microsoft_Teams_Graph_RESTAPIs_Connect.Models.ViewModels;
 
-namespace MicrosoftGraph_Security_API_Sample.Providers
+namespace Microsoft_Teams_Graph_RESTAPIs_Connect.Providers
 {
     public class AlertFilterValueProvider : IValueProvider
     {

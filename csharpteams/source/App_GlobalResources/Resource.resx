@@ -126,11 +126,11 @@
     <comment>Description of app for About view</comment>
   </data>
   <data name="App_Name" xml:space="preserve">
-    <value>Microsoft Teams Graph Connect Sample for ASP.NET 4.6</value>
+    <value>Microsoft Teams Phishing Detector</value>
     <comment>Full app name for title and copyright</comment>
   </data>
   <data name="App_Name_Short" xml:space="preserve">
-    <value>Microsoft Teams Graph Connect C# Sample</value>
+    <value>Microsoft Teams Phishing Detector</value>
     <comment>Short app name for navigation bar and browser tab</comment>
   </data>
   <data name="Error_AuthChallengeNeeded" xml:space="preserve">

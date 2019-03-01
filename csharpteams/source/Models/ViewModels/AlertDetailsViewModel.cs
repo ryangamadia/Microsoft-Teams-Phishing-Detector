@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Graph;
 
-namespace MicrosoftGraph_Security_API_Sample.Models.ViewModels
+namespace Microsoft_Teams_Graph_RESTAPIs_Connect.Models.ViewModels
 {
     public class AlertDetailsViewModel
     {

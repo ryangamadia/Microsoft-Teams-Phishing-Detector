@@ -7,9 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MicrosoftGraph_Security_API_Sample.Models;
+using Microsoft_Teams_Graph_RESTAPIs_Connect.Models;
 
-namespace MicrosoftGraph_Security_API_Sample.Providers
+namespace Microsoft_Teams_Graph_RESTAPIs_Connect.Providers
 {
     public static class GraphQueryProvider
     {

@@ -97,7 +97,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Microsoft Teams Graph Connect Sample for ASP.NET 4.6.
+        ///   Looks up a localized string similar to Microsoft Teams Phishing Detector.
         /// </summary>
         internal static string App_Name {
             get {
@@ -106,7 +106,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Microsoft Teams Graph Connect C# Sample.
+        ///   Looks up a localized string similar to Microsoft Teams Phishing Detector.
         /// </summary>
         internal static string App_Name_Short {
             get {

@@ -3,7 +3,7 @@
 *  See LICENSE in the source repository root for complete license information. 
 */
 
-namespace MicrosoftGraph_Security_API_Sample.Models
+namespace Microsoft_Teams_Graph_RESTAPIs_Connect.Models
 {
     public class UpdateAlertResultModel
     {

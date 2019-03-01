@@ -5,7 +5,7 @@
 
 using System.Collections.Generic;
 
-namespace MicrosoftGraph_Security_API_Sample.Models
+namespace Microsoft_Teams_Graph_RESTAPIs_Connect.Models
 {
     public class AlertResultsModel
     {

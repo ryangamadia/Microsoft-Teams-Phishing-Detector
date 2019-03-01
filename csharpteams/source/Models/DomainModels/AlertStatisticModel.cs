@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace MicrosoftGraph_Security_API_Sample.Models.DomainModels
+namespace Microsoft_Teams_Graph_RESTAPIs_Connect.Models.DomainModels
 {
     public enum SeveritySortOrder
     {
