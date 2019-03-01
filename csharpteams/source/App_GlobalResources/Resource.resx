@@ -118,11 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About" xml:space="preserve">
-    <value>About</value>
+    <value>Alerts</value>
     <comment>Link to About page</comment>
   </data>
   <data name="About_Description" xml:space="preserve">
-    <value>Your application description page.</value>
+    <value>This is the alerts page.</value>
     <comment>Description of app for About view</comment>
   </data>
   <data name="App_Name" xml:space="preserve">
@@ -149,6 +149,15 @@
     <value>Home</value>
     <comment>Link to Home page</comment>
   </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Alerts</value>
+    <comment>Shows Alerts</comment>
+      </data>
+  <data name="Alert_Description" xml:space="preserve">
+    <value>Alert notifications go here.</value>
+    <comment>Displays alerts</comment>
+  </data>
+  
   <data name="No_Results" xml:space="preserve">
     <value>Operation completed, but no results were returned.</value>
     <comment>Message if no results were returned (e.g. an empty collection)</comment>

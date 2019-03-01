@@ -9,6 +9,8 @@ using Microsoft_Teams_Graph_RESTAPIs_Connect.Models;
 using Newtonsoft.Json;
 using Resources;
 using System.Configuration;
+using Microsoft.Graph;
+using MicrosoftGraph_Security_API_Sample.Models;
 
 namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
 {
@@ -23,6 +25,8 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
     public class GraphService : HttpHelpers
     {
         private static string GraphRootUri = ConfigurationManager.AppSettings["ida:GraphRootUri"];
+        private GraphServiceClient graphClient = null;
+
 
         /// <summary>
         /// Create new channel.
@@ -80,9 +84,9 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
             return await HttpGetList<Team>($"/me/joinedTeams");
         }
 
-        public async Task<IEnumerable<Group>> GetMyGroups(string accessToken)
+        public async Task<IEnumerable<Models.Group>> GetMyGroups(string accessToken)
         {
-            return await HttpGetList<Group>($"/me/joinedGroups", endpoint: graphBetaEndpoint);
+            return await HttpGetList<Models.Group>($"/me/joinedGroups", endpoint: graphBetaEndpoint);
         }
 
         public async Task PostMessage(string accessToken, string teamId, string channelId, string message)
@@ -96,7 +100,7 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
                 {
                     rootMessage = new RootMessage()
                     {
-                        body = new Message()
+                        body = new Models.Message()
                         {
                             content = message + "yas queen"
                         }
@@ -105,10 +109,10 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
                 endpoint: graphBetaEndpoint);
         }
 
-        public async Task<Group> CreateNewTeamAndGroup(string accessToken, String displayName, String mailNickname, String description)
+        public async Task<Models.Group> CreateNewTeamAndGroup(string accessToken, String displayName, String mailNickname, String description)
         {
             // create group
-            Group groupParams = new Group()
+            Models.Group groupParams = new Models.Group()
             {
                 displayName = displayName,
                 mailNickname = mailNickname,
@@ -120,8 +124,8 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
                 visibility = "Private",
             };
 
-            Group createdGroup = (await HttpPost($"/groups", groupParams))
-                            .Deserialize<Group>();
+            Models.Group createdGroup = (await HttpPost($"/groups", groupParams))
+                            .Deserialize<Models.Group>();
             string groupId = createdGroup.id;
 
             // add me as member
@@ -168,7 +172,7 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
             // for more about delays with adding members.
 
             // Step 1 -- Look up the user's id from their UPN
-            String userId = (await HttpGet<User>($"/users/{upn}")).id;
+            String userId = (await HttpGet<Models.User>($"/users/{upn}")).id;
 
             // Step 2 -- add that id to the group
             string payload = $"{{ '@odata.id': '{graphBetaEndpoint}/users/{userId}' }}";
@@ -176,6 +180,51 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
 
             if (isOwner)
                 await HttpPost($"/groups/{teamId}/owners/$ref", payload);
+        }
+
+public async Task<Tuple<IEnumerable<Alert>, string>> GetAlerts(AlertFilterModel filters, Dictionary<string, string> odredByParams = null)
+        {
+            if (filters == null)
+            {
+                var result = await this.graphClient.Security.Alerts.Request().Top(filters.Top).GetAsync();
+                return new Tuple<IEnumerable<Alert>, string>(result, string.Empty);
+            }
+            else
+            {
+                // Create filter query
+                var filterQuery = MicrosoftGraph_Security_API_Sample.Providers.GraphQueryProvider.GetQueryByAlertFilter(filters);
+
+                var customOrderByParams = new Dictionary<string, string>();
+                //// If there are no filters and there are no custom odredByParams (if specified only top X)
+                if ((odredByParams == null || odredByParams.Count() < 1) && filters.Count < 1)
+                {
+                    //// Order by 1. Provider 2. CreatedDateTime (desc)
+                    customOrderByParams.Add("vendorInformation/provider", "asc");
+                    customOrderByParams.Add("createdDateTime", "desc");
+                }
+                else if (filters.Count >= 1 && filters.ContainsKey("createdDateTime"))
+                {
+                    customOrderByParams.Add("createdDateTime", "desc");
+                }
+
+                // Create request with filter and top X
+                var request = this.graphClient.Security.Alerts.Request().Filter(filterQuery).Top(filters.Top);
+
+                // Add order py params
+                if (customOrderByParams.Count > 0)
+                {
+                    request = request.OrderBy(string.Join(", ", customOrderByParams.Select(param => $"{param.Key} {param.Value}")));
+                }
+                else if (odredByParams != null && odredByParams.Count() > 0)
+                {
+                    request = request.OrderBy(string.Join(", ", odredByParams.Select(param => $"{param.Key} {param.Value}")));
+                }
+
+                // Get alerts
+                var result = await request.GetAsync();
+
+                return new Tuple<IEnumerable<Alert>, string>(result, filterQuery);
+            }
         }
     }
 }

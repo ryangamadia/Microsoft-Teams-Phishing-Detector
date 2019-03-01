@@ -50,6 +50,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Graph, Version=1.11.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Graph.1.11.0\lib\net45\Microsoft.Graph.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Graph.Core, Version=1.11.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Graph.Core.1.11.0\lib\net45\Microsoft.Graph.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Identity.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Identity.Client.1.0.304142221-alpha\lib\net45\Microsoft.Identity.Client.dll</HintPath>
       <Private>True</Private>
@@ -242,6 +248,11 @@
     </Compile>
     <Compile Include="ImportantFiles\GraphService.cs" />
     <Compile Include="ImportantFiles\ServiceHelper.cs" />
+    <Compile Include="Models\DomainModels\AlertFilterModel.cs" />
+    <Compile Include="Models\DomainModels\AlertStatisticModel.cs" />
+    <Compile Include="Models\DomainModels\SecureScoreControlProfileModel.cs" />
+    <Compile Include="Models\GraphDeviceModel.cs" />
+    <Compile Include="Models\GraphUserModel.cs" />
     <Compile Include="Models\HtmlHelpers.cs" />
     <Compile Include="Models\TeamsApp.cs" />
     <Compile Include="Models\Clone.cs" />
@@ -259,7 +270,19 @@
     <Compile Include="Models\TeamGuestSetting.cs" />
     <Compile Include="Models\TeamMemberSettings.cs" />
     <Compile Include="Models\TeamMessagingSettings.cs" />
+    <Compile Include="Models\ViewModels\AlertDetailsViewModel.cs" />
+    <Compile Include="Models\ViewModels\AlertDeviceViewModel.cs" />
+    <Compile Include="Models\ViewModels\AlertFilterViewModel.cs" />
+    <Compile Include="Models\ViewModels\AlertResultItemModel.cs" />
+    <Compile Include="Models\ViewModels\AlertStatisticViewModel.cs" />
+    <Compile Include="Models\ViewModels\ManageAlertViewModel.cs" />
+    <Compile Include="Models\ViewModels\ResultQueriesViewModel.cs" />
+    <Compile Include="Models\ViewModels\SecureScoreDetailsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\AlertFilterValueProvider.cs" />
+    <Compile Include="Providers\AlertFilterValueProviderFactory.cs" />
+    <Compile Include="Providers\GraphQueryProvider.cs" />
+    <Compile Include="Providers\IAuthProvider.cs" />
     <Compile Include="SessionTokenCache\SessionTokenCache.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Views\MyExtensionMethods.cs" />
@@ -301,6 +324,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <None Include="Views\Home\Alerts.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

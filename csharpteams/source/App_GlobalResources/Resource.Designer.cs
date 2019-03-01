@@ -61,7 +61,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About.
+        ///   Looks up a localized string similar to Alerts.
         /// </summary>
         internal static string About {
             get {
@@ -70,11 +70,29 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your application description page..
+        ///   Looks up a localized string similar to This is the alerts page..
         /// </summary>
         internal static string About_Description {
             get {
                 return ResourceManager.GetString("About_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alerts.
+        /// </summary>
+        internal static string Alerts {
+            get {
+                return ResourceManager.GetString("Alerts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alert notifications go here..
+        /// </summary>
+        internal static string Alert_Description {
+            get {
+                return ResourceManager.GetString("Alert_Description", resourceCulture);
             }
         }
         
