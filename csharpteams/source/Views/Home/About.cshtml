@@ -1,8 +1,392 @@
-﻿<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
-        See LICENSE in the source repository root for complete license information. -->
+﻿﻿
+<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+       See LICENSE in the source repository root for complete license information. -->
+
+@using MicrosoftGraph_Security_API_Sample.Models
+@using Newtonsoft.Json;
 @using Resources
 @{
-    ViewBag.Title = Resource.About;
+    ViewBag.Title = "Alert Details";
+
+    var currentAlert = Session["CurrentAlert"] as AlertModel;
+    var alertResults = Session["GetAlertResults"] as AlertResultsModel;
+    var subscriptionResult = Session["SubscriptionResult"] as SubscriptionResultModel;
+    var updateAlertResults = Session["UpdateAlertResults"] as UpdateAlertResultModel;
+    var listActiveSubscriptions = Session["GetSubscriptionResults"] as SubscriptionCollection;
+    var showAlertManagement = updateAlertResults != null;
+    var showSubscriptionResults = subscriptionResult != null || listActiveSubscriptions != null;
+
+    var currentTab = "metadata";
+    if (alertResults != null || currentAlert != null)
+    {
+        currentTab = "metadata";
+    }
+    if (updateAlertResults != null)
+    {
+        currentTab = "management";
+    }
+    else if (currentAlert?.User?.SelectedDevice != null)
+    {
+        currentTab = "user";
+    }
+    else if (showSubscriptionResults == true)
+    {
+        currentTab = "subscription";
+    }
+    else
+    {
+        currentTab = "metadata";
+    }
 }
-<h2>@ViewBag.Title</h2>
-<p>@Resource.About_Description</p>
+
+<div class="container-tab">
+    <ul class="nav nav-tabs" role="tablist">
+
+        <li role="presentation" class="@(currentTab == "metadata" ? "active" : string.Empty )">
+            <a href="#alert-metadata" aria-controls="alert-metadata" role="tab" data-toggle="tab">Alert details</a>
+        </li>
+        <li role="presentation" class="@(currentTab == "user" ? "active" : string.Empty)">
+            <a href="#user-device-metadata" aria-controls="user-device-metadata" role="tab" data-toggle="tab">User and device details</a>
+        </li>
+
+        @if (updateAlertResults != null)
+        {
+            <li role="presentation" class="@(currentTab=="management" ? "active" : string.Empty)">
+                <a href="#update-alert-results" aria-controls="update-alert-results" role="tab" data-toggle="tab">Alert management</a>
+            </li>
+        }
+        @if (showSubscriptionResults == true)
+        {
+            <li role="presentation" class="@(currentTab=="subscription" ? "active" : string.Empty)">
+                <a href="#subscription-results" aria-controls="subscription-results" role="tab" data-toggle="tab">Subscription details</a>
+            </li>
+        }
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade @(currentTab=="metadata" ? "active in" : string.Empty)" id="alert-metadata">
+            @if (!Request.IsAuthenticated)
+            {
+                <span>No alert selected</span>
+            }
+            else if (currentAlert != null && !string.IsNullOrEmpty(currentAlert.Metadata))
+            {
+                @Html.Raw(currentAlert.Query)
+                <pre>@currentAlert.Metadata</pre>
+            }
+            else if (alertResults != null)
+            {
+                @Html.Raw(alertResults.Query)
+            }
+            else if (currentAlert == null)
+            {
+                <span>No alert selected</span>
+            }
+            else if (string.IsNullOrEmpty(currentAlert.Metadata))
+            {
+                <span>No alert data</span>
+            }
+        </div>
+        <div role="tabpanel" class="tab-pane fade @(currentTab=="user" ? "active in" : string.Empty)" id="user-device-metadata">
+            @if ((currentAlert?.User == null && currentAlert?.Device == null) || !Request.IsAuthenticated)
+            {
+                <span>No data found</span>
+            }
+            else
+            {
+                if (currentAlert.User != null)
+                {
+                    var user = currentAlert.User;
+                    <div class="row">
+                        <div class="col-md-2 profile-picture">
+                            @if (user.Picture != null)
+                            {
+                                <img src="@user.Picture" width="100" height="100" />
+                            }
+                            else
+                            {
+                                <div class="profile-picture-placeholder">[No picture]</div>
+                            }
+                        </div>
+                        <div class="col-md-9">
+                            <h3>@user.DisplayName</h3>
+                            <h3>@user.Email</h3>
+                        </div>
+                    </div>
+                    <div>
+                        <span>Job title: </span><span class="profile-value">@(user.JobTitle ?? "[No data]")</span>
+                    </div>
+                    <div>
+                        <span>Manager: </span><span class="profile-value">@(user?.Manager?.DisplayName ?? "[No data]")</span>
+                    </div>
+                    <div>
+                        <span>Contact via </span><span class="profile-value">@(user.ContactVia ?? "[No data]")</span>
+                    </div>
+                    <div>
+                        <span>Office location: </span><span class="profile-value">@(user.OfficeLocation ?? "[No data]")</span>
+                    </div>
+                    <div>
+                        <span>Email: </span>
+                        <span class="profile-value">
+                            @if (!string.IsNullOrEmpty(@user.Email))
+                            {
+                                <a href="mailto: @user.Email">@user.Email</a>
+                            }
+                            else
+                            {
+                                @("[No data]")
+                            }
+                        </span>
+                    </div>
+                    if (user.RegisteredDevices?.Any() ?? false)
+                    {
+                        <div>
+                            <a data-toggle="collapse" href="#registeredDevices" aria-expanded="true" aria-controls="registeredDevices">
+                                <span class="caret"></span> Registered devices
+                            </a>
+                            <ul class="devices-container collapse in" id="registeredDevices" aria-expanded="true">
+                                @foreach (var device in user.RegisteredDevices)
+                                {
+                                    <li>
+                                        <span class="user-device @(device.Id == user?.SelectedDevice?.Id ? "selected" : string.Empty)">@Html.ActionLink(device.DisplayName, "GetDevice", new { id = device.Id })</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    if (user.OwnedDevices?.Any() ?? false)
+                    {
+                        <div>
+                            <a data-toggle="collapse" href="#ownedDevices" aria-expanded="true" aria-controls="ownedDevices">
+                                <span class="caret"></span> Owned devices
+                            </a>
+                            <ul class="devices-container collapse in" id="ownedDevices" aria-expanded="true">
+                                @foreach (var device in user.OwnedDevices)
+                                {
+                                    <li>
+                                        <span class="user-device @(device.Id == user?.SelectedDevice?.Id ? "selected" : string.Empty)">@Html.ActionLink(device.DisplayName, "GetDevice", new { id = device.Id })</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                }
+
+                if (currentAlert.User?.SelectedDevice != null)
+                {
+                    var selectedDevice = currentAlert.User?.SelectedDevice;
+
+                    <div class="container-fluid devices-details">
+                        <hr />
+
+                        @if (!string.IsNullOrEmpty(selectedDevice.DisplayName))
+                        {
+                            <div class="row">
+                                <div class="col-md-2"><img src="~/Content/laptop_icon.png" class="center-block" style="margin: 8px" /></div>
+                                <div class="col-md-10"><h3>@selectedDevice.DisplayName</h3></div>
+                            </div>
+                        }
+
+                        <div>
+                            <div>
+                                <span>Compliance status: </span><span class="profile-value">@(selectedDevice.IsCompliant == null ? "[No data]" : (selectedDevice.IsCompliant.Value ? "Compliant" : "Not compliant"))</span>
+                            </div>
+                            <div>
+                                <span>OS: </span><span class="profile-value">@(selectedDevice.Os ?? "[No data]")</span>
+                            </div>
+                            <div>
+                                <span>OS Version: </span><span class="profile-value">@(selectedDevice.OsVersion ?? "[No data]")</span>
+                            </div>
+                            <div>
+                                <span>Intune managed: </span><span class="profile-value">@(selectedDevice.IsIntuneManaged == null ? "[No data]" : (selectedDevice.IsIntuneManaged.Value ? "Yes" : "No"))</span>
+                            </div>
+                            <div>
+                                <span>Approximate last sign-in: </span><span class="profile-value">@(selectedDevice.ApproximateLastSignIn == null ? "[No data]" : selectedDevice.ApproximateLastSignIn.Value.ToString())</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (currentAlert.Device != null)
+                {
+                    <div class="container-fluid devices-details">
+                        <hr />
+
+                        @if (!string.IsNullOrEmpty(currentAlert.Device.Fqdn))
+                        {
+                            <div class="row">
+                                <div class="col-md-2"><img src="~/Content/laptop_icon.png" class="center-block" style="margin: 8px" /></div>
+                                <div class="col-md-10"><h3>@currentAlert.Device.Fqdn</h3></div>
+                            </div>
+                        }
+
+                        <div>
+                            <div>
+                                <span>Azure AD joined: </span><span class="profile-value">@(currentAlert.Device.IsAzureDomainJoined == null ? "[No data]" : (currentAlert.Device.IsAzureDomainJoined.Value ? "Yes" : "No"))</span>
+                            </div>
+                            <div>
+                                <span>Public IP Address (at alert): </span><span class="profile-value">@(currentAlert.Device.PublicIpAddress ?? "[No data]")</span>
+                            </div>
+                            <div>
+                                <span>Private IP Address (at alert): </span><span class="profile-value">@(currentAlert.Device.PrivateIpAddress ?? "[No data]")</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        @if (showAlertManagement)
+        {
+            <div role="tabpanel" class="tab-pane fade @(currentTab=="management" ? "active in" : string.Empty)" id="update-alert-results">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @if (updateAlertResults != null)
+                            {
+                                if (!string.IsNullOrEmpty(updateAlertResults.Error))
+                                {
+                                    @updateAlertResults.Error
+                                }
+                                else
+                                {
+                                    @Html.Raw(updateAlertResults.Query)
+
+                                    if (updateAlertResults.Before != null)
+                                    {
+                                        <br />
+                                        <br />
+                                        <h3>Original alert details</h3>
+                                        <table class="table table-striped alert-details" cellpadding="10">
+                                            <thead>
+                                                <tr><th>Property</th><th>Details</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>Title</td><td>@updateAlertResults.Before.Title</td></tr>
+                                                <tr><td>Category</td><td>@updateAlertResults.Before.Category</td></tr>
+                                                <tr><td>Severity</td><td>@updateAlertResults.Before.Severity</td></tr>
+                                                <tr><td>Status</td><td>@updateAlertResults.Before.Status</td></tr>
+                                                <tr><td>Feedback</td><td>@updateAlertResults.Before.Feedback</td></tr>
+                                                <tr><td>Provider</td><td>@updateAlertResults.Before.Provider</td></tr>
+                                                <tr><td>Assigned To</td><td>@updateAlertResults.Before.AssignedTo</td></tr>
+                                                <tr><td>Comments</td><td>@Html.Raw(@updateAlertResults.Before.Comments)</td></tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                    if (updateAlertResults.After != null)
+                                    {
+                                        <hr />
+                                        <br />
+                                        <h3>Updated alert details</h3>
+                                        <table class="table table-striped alert-details" cellpadding="10">
+                                            <thead>
+                                                <tr><th>Property</th><th>Details</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>Title</td><td>@updateAlertResults.After.Title</td></tr>
+                                                <tr><td>Category</td><td>@updateAlertResults.After.Category</td></tr>
+                                                <tr><td>Severity</td><td>@updateAlertResults.After.Severity</td></tr>
+                                                <tr><td>Status</td><td>@updateAlertResults.After.Status</td></tr>
+                                                <tr><td>Feedback</td><td>@updateAlertResults.After.Feedback</td></tr>
+                                                <tr><td>Provider</td><td>@updateAlertResults.After.Provider</td></tr>
+                                                <tr><td>Assigned To</td><td>@updateAlertResults.After.AssignedTo</td></tr>
+                                                <tr><td>Comments</td><td>@Html.Raw(@updateAlertResults.After.Comments)</td></tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                }
+                            }
+                            else if (!string.IsNullOrEmpty(currentAlert?.Query))
+                            {
+                                @Html.Raw(currentAlert.Query)
+                            }
+                            else if (!string.IsNullOrEmpty(alertResults?.Query))
+                            {
+                                @Html.Raw(alertResults.Query)
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (showSubscriptionResults)
+        {
+            <div role="tabpanel" class="tab-pane fade @(currentTab=="subscription" ? "active in" : string.Empty)" id="subscription-results">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @if (subscriptionResult != null)
+                            {
+                                if (!string.IsNullOrEmpty(subscriptionResult.Error))
+                                {
+                                    @subscriptionResult.Error
+                                }
+                                else
+                                {
+                                    <span>Subscription created: </span>
+                                    <br>
+
+                                    @Html.Raw(subscriptionResult.Query)
+                                    <br>
+
+                                    <table class="table table-striped subscription-details" border="1" cellpadding="10">
+                                        <thead>
+                                            <tr><th>Property</th><th>Details</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>Id</td><td>@subscriptionResult.Id</td></tr>
+                                            <tr><td>Client State</td><td>@subscriptionResult.ClientState</td></tr>
+                                            <tr><td>Change Type</td><td>@subscriptionResult.ChangeType</td></tr>
+                                            <tr><td>Resource</td><td>@subscriptionResult.Resource</td></tr>
+                                            <tr><td>Notification URL</td><td>@subscriptionResult.NotificationUrl</td></tr>
+                                            <tr><td>Expiration Datetime</td><td>@subscriptionResult.ExpirationDateTime</td></tr>
+                                        </tbody>
+                                    </table>
+                                }
+                            }
+
+                            @if (listActiveSubscriptions != null && Request.IsAuthenticated)
+                            {
+                                @Html.Raw(listActiveSubscriptions.Query)
+
+                                <div>
+                                    @if (listActiveSubscriptions.Subscriptions?.Any() ?? false)
+                                    {
+                                        <br />
+                                        <h3>Subscriptions that are currently active: </h3>
+                                        <br />
+                                        <table class="table table-striped" border="1" cellpadding="50">
+                                            <thead>
+                                                <tr>
+                                                    <th>Subscription ID</th>
+                                                    <th>Resource URL</th>
+                                                    <th>Expiration DateTime</th>
+                                                </tr>
+
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var subscription in listActiveSubscriptions.Subscriptions)
+                                                {
+                                                    <tr>
+                                                        <td>@subscription.Id</td>
+                                                        <td>@subscription.Resource</td>
+                                                        <td>@subscription.ExpirationDateTime</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <br />
+                                        <b>@("No active subscriptions")</b>
+                                    }
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
