@@ -9,6 +9,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
@@ -25,11 +26,13 @@ public class Main {
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
 
-
-        boolean isalsoGoodSite = GoogleSearch.GoogleVerify("google.com");
-    	boolean isGoodSite = GoogleSearch.GoogleVerify("http://verification-cra-interac-deposit.com.beccamartenson.com/bnc/National%20Bank%20Online.html"); 
-        System.out.println(isGoodSite);
+        Scanner scanner = new Scanner(System.in);
+        String url = scanner.nextLine();
+        boolean isalsoGoodSite = GoogleSearch.GoogleVerify(url);
+    	//boolean isGoodSite = GoogleSearch.GoogleVerify("http://verification-cra-interac-deposit.com.beccamartenson.com/bnc/National%20Bank%20Online.html"); 
+        //System.out.println(isGoodSite);
         System.out.println(isalsoGoodSite);
+        
     }
 
 
