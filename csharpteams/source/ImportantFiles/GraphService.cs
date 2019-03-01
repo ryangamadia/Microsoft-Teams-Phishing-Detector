@@ -92,15 +92,14 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
 
         public async Task PostMessage(string accessToken, string teamId, string channelId, string message)
         {
-            Boolean maliciousWebsite = Verify(message); 
+            Boolean safeWebsite = Verify(message); 
 
-            if (message.Equals("h"))
+
+            if (safeWebsite == false)
             {
-
-                message = "lol link";
+                message = "Potentially unsafe website post attempted, alerting admin for potential security vulnerability."; 
             }
 
-            message = maliciousWebsite.ToString(); 
 
             await HttpPost($"/teams/{teamId}/channels/{channelId}/chatThreads",
                 new PostMessage()
@@ -109,7 +108,7 @@ namespace Microsoft_Teams_Graph_RESTAPIs_Connect.ImportantFiles
                     {
                         body = new Models.Message()
                         {
-                            content = message + "yas queen"
+                            content = message
                         }
                     }
                 },
